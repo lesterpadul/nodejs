@@ -12,9 +12,19 @@ app.get('/home', function (req, res) {
 	controller.pageHandler(req, res);
 });
 
+// load users
+app.get('/loadUsers', function (req, res) {
+	controller.getUsers(req, res);
+});
+
 // register user data
 app.get('/register', function (req, res){
 	controller.registerUser(req, res);
+});
+
+// update user data
+app.get('/update/:id', function (req, res) {
+	res.send(req.params.id);
 });
 
 // set port to listen

@@ -1,11 +1,12 @@
-var express = require("express");
-var app     = express();
-var db      = require("../model/db.js");
-var url     = require("url");
-var path    = require("path");
-var crypto  = require("crypto");
+var express    = require("express");
+var app        = express();
+var db         = require("../model/db.js");
+var url        = require("url");
+var path       = require("path");
+var crypto     = require("crypto");
 var cryptoAlgo = 'aes-256-ctr';
 var cryptoPass = 'd6F3Efeq';
+var defer    = require('deferred');
 
 // cipher password
 function encrypt (text) {
@@ -54,4 +55,21 @@ exports.registerUser = function (req, res, next) {
 			return false;
 		});
 	});
+}
+
+// get users
+exports.getUsers = function (req, res, next) {
+	db.users
+	.findAll({
+		where : {
+			status : 1
+		}
+	})
+	.then(function(users){
+		res.json({'users' : users});
+	});
+}
+
+// update user
+exports.getUpdateUser = function (req, res) {
 }

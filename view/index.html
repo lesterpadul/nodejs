@@ -12,23 +12,72 @@
 		<b>C. Password</b> : <input type="password" name="cupassword"><br>
 		<input type="button" value="submit" id="passAjaxNode">
 	</form>
+
+	<div class="users-container">
+		<div class='individual-users' style="display: none;">
+			<div class="name" style="font-weight:bold;"></div>
+			<div class="email"></div>
+			<a href="javascript:void(0);">remove</a>
+			<a href="javascript:void(0);">update</a>
+			<hr>
+		</div>
+	</div>
+		
+
 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<script>
 		$(document).ready(function(){
+			// load users
+			loadUsers();
+
+			// submit users
 			$('#passAjaxNode')
-			.click(function(){
+			.off('click')
+			.on('click', function(){
 				$.get(
 					'http://localhost:81/register',
 					$('#registerUser').serialize(),
 					function(data){	
-						if (data.status == 200) {
-							window.location.href = "/login";
-						} else {
-							window.location.href = "/error";
-						}
-					},'json');
+						loadUsers();
+					},
+					'json'
+				);
 			});
 		});
+
+		// load users
+		function loadUsers () {
+			$.get(
+				'http://localhost:81/loadUsers',
+				{getUsers:true},
+				function(data){
+					// check if 'users' is empty
+					if (data.users.length == 0) {
+						console.log(users);
+						return false;
+					}
+
+					// empty the container
+					$('.individual-users').not('.individual-users:eq(0)').remove();
+
+					// loop through each users
+					for (var i = 0; i < data.users.length; i++) {
+						showIndividualUsers(data.users[i]);
+					}
+				},
+				'json'
+			);
+		}
+
+		// show individual users
+		function showIndividualUsers(user){
+			console.log(user);
+			var clone = $('.individual-users:eq(0)').clone();
+			clone.show();
+			clone.find('.name').html(user.name);
+			clone.find('.email').html(user.email);
+			$('.users-container').prepend(clone);
+		}
 	</script>
 </body>
 </html>
