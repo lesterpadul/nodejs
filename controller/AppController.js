@@ -29,7 +29,8 @@ exports.registerUser = function (req, res, next) {
 		{
 			attributes : ['id'],
 			where : {
-				email:req.query.uemail
+				email : req.query.uemail,
+				status : 1
 			}
 		}
 	)
